@@ -24,18 +24,17 @@ var hashedPassword = bcrypt.hashSync(req.body.password, salt);
 //LOGIN
 
 router.post('/login', async (req, res) => {
- 
-    try{
-        let existingUser = await User.findOne(
-            {
-                username: req.body.user_name
-            }
-        );
+  const {username} = req.body.user
+     console.log(req.body.user)
 
+    try{
+        let existingUser = await User.findOne({username: username});
+        console.log(existingUser)
         !existingUser && res.status(401).json("Wrong User Name");
 
 
-  const isPasswordCorrect = bcrypt.compareSync(req.body.password, existingUser.password);
+  const isPasswordCorrect = bcrypt.compareSync(req.body.user.password, existingUser.password);
+  console.log(isPasswordCorrect)
   if (!isPasswordCorrect) {
     return res.status(400).json({ message: "Inavlid Email / Password" });
   }
